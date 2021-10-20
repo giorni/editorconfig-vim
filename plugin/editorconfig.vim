@@ -60,6 +60,10 @@ if !exists('g:EditorConfig_disable_rules')
     let g:EditorConfig_disable_rules = []
 endif
 
+if !exists('g:EditorConfig_filetype')
+    let g:EditorConfig_filetype = 0
+endif
+
 " Copy some of the globals into script variables --- changes to these
 " globals won't affect the plugin until the plugin is reloaded.
 if exists('g:EditorConfig_core_mode') && !empty(g:EditorConfig_core_mode)

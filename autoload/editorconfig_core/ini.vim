@@ -214,6 +214,17 @@ endfunction
 function! s:matches_filename(config_filename, target_filename, glob)
 "    config_dirname = normpath(dirname(config_filename)).replace(sep, '/')
     let l:config_dirname = fnamemodify(a:config_filename, ':p:h') . '/'
+    let l:target_filename = a:target_filename
+
+    if g:EditorConfig_filetype
+        if fnamemodify(a:target_filename, ':e') == ''
+            let l:target_filename = l:target_filename . '.' . &filetype
+            if g:editorconfig_core_vimscript_debug
+                echom '- ini#matches_filename: filetype appended <' .
+                    \ &filetype . '>'
+            endif
+        endif
+    endif
 
     if editorconfig_core#util#is_win()
         " Regardless of whether shellslash is set, make everything slashes
@@ -243,13 +254,13 @@ function! s:matches_filename(config_filename, target_filename, glob)
     endif
 
     if g:editorconfig_core_vimscript_debug
-        echom '- ini#matches_filename: checking <' . a:target_filename .
+        echom '- ini#matches_filename: checking <' . l:target_filename .
             \ '> against <' . l:glob . '> with respect to config file <' .
             \ a:config_filename . '>'
         echom '- ini#matches_filename: config_dirname is ' . l:config_dirname
     endif
 
-    return editorconfig_core#fnmatch#fnmatch(a:target_filename,
+    return editorconfig_core#fnmatch#fnmatch(l:target_filename,
         \ l:config_dirname, l:glob)
 endfunction " matches_filename
 
